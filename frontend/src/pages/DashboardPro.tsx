@@ -4,6 +4,8 @@ import { Package, AlertTriangle, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SidebarPro from "../components/SidebarPro";
+import HeaderPro from "../components/HeaderPro";
+import VoiceAssistant from "../components/VoiceAssistant"; // 👈 NEW: import voice bot
 
 interface InventoryItem {
   id: number;
@@ -18,6 +20,7 @@ export default function DashboardPro() {
   const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // 🔹 Fetch inventory
   useEffect(() => {
     fetch("http://127.0.0.1:3000/inventory")
       .then((res) => res.json())
@@ -28,12 +31,9 @@ export default function DashboardPro() {
       .catch((err) => console.error(err));
   }, []);
 
-  // ✅ Search filter
+  // 🔍 Search function
   const handleSearch = (query: string) => {
-    if (!query.trim()) {
-      setFilteredItems(items);
-      return;
-    }
+    if (!query.trim()) return setFilteredItems(items);
     const result = items.filter((item) =>
       item.name.toLowerCase().includes(query.toLowerCase())
     );
@@ -50,7 +50,10 @@ export default function DashboardPro() {
       <SidebarPro open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       {/* Main Section */}
-      <div className="flex-1 md:ml-56">
+      <div className="flex-1 md:ml-56 relative">
+        {/* Header */}
+        <HeaderPro onMenuClick={() => setMenuOpen(true)} onSearchChange={handleSearch} />
+
         {/* Stats Section */}
         <motion.section
           className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6"
@@ -79,7 +82,7 @@ export default function DashboardPro() {
         </motion.section>
 
         {/* Tabs Section */}
-        <main className="p-6">
+        <main className="p-6 pb-28"> {/* space for mic button */}
           <Tabs defaultValue="inventory" className="w-full">
             <TabsList className="grid grid-cols-2 bg-white/60 dark:bg-slate-800/60 shadow-md rounded-xl backdrop-blur-md">
               <TabsTrigger value="inventory">📦 Inventory</TabsTrigger>
@@ -101,9 +104,7 @@ export default function DashboardPro() {
                       className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md hover:shadow-xl transition-all"
                     >
                       <CardContent className="p-5">
-                        <h2 className="text-lg font-semibold capitalize">
-                          {item.name}
-                        </h2>
+                        <h2 className="text-lg font-semibold capitalize">{item.name}</h2>
                         <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
                           Quantity: {item.quantity}
                         </p>
@@ -156,11 +157,15 @@ export default function DashboardPro() {
             </TabsContent>
           </Tabs>
         </main>
+
+        {/* 🎙️ Voice Assistant Floating Button */}
+        <VoiceAssistant /> 
       </div>
     </div>
   );
 }
 
+// ✅ Stat Card Component
 function StatCard({
   icon,
   label,

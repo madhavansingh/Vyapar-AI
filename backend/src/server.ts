@@ -1,21 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";  // ✅ import this
+import cors from "cors";
 
 import whatsappRouter from "./routes/whatsapp";
 import inventoryRouter from "./routes/inventory";
+import aiRouter from "./routes/ai";
 
 dotenv.config();
 
 const app = express();
 
-// ✅ FIX: Enable CORS properly
+// ✅ Enable CORS for frontend connection
 app.use(cors({
-  origin: "http://localhost:5173", // your frontend URL
+  origin: "http://localhost:5173", // your React frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  credentials: true,
 }));
 
+// ✅ Parse JSON requests
 app.use(express.json({ limit: "10mb" }));
 
 // 🧠 Health check
@@ -29,9 +31,11 @@ app.post("/test", (req, res) => {
   res.json({ received: true, body: req.body });
 });
 
-// 📡 Webhook + Inventory
+// 📡 Routers
 app.use("/webhook", whatsappRouter);
 app.use("/inventory", inventoryRouter);
+app.use("/ai", aiRouter); // 🧠 Added this line
 
+// 🚀 Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Vyapar AI Backend running on port ${PORT}`));
