@@ -1,1 +1,22 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/postcss";
+@plugin "tailwindcss-animate";
+
+/* Base transition + theme setup */
+html {
+  transition: background 0.3s, color 0.3s;
+}
+
+body {
+  @apply bg-slate-50 text-slate-800 font-sans transition-colors duration-300;
+}
+
+/* Dark mode */
+.dark body {
+  @apply bg-slate-900 text-slate-100;
+}
+
+/* Optional: card styles */
+.card {
+  @apply bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-xl shadow transition-all;
+}
