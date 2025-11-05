@@ -4,13 +4,14 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
-model InventoryItem {
+model Inventory {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique       // 👈 Important! Make `name` unique
   quantity  Int
-  expiry    String?
+  expiry    String?  // Optional field for expiry dates
   createdAt DateTime @default(now())
 }
+
