@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import whatsappRouter from "./routes/whatsapp";
+import inventoryRouter from "./routes/inventory"; // ✅ New route import
 
 dotenv.config();
 
@@ -18,10 +19,14 @@ app.post("/test", (req, res) => {
   res.json({ received: true, body: req.body });
 });
 
-// 📡 Mount WhatsApp webhook
+// 📡 WhatsApp AI webhook
 app.use("/webhook", whatsappRouter);
 console.log("📡 Webhook router mounted at /webhook");
 
-// 🚀 Start server
+// 📦 Inventory + Alerts API
+app.use("/inventory", inventoryRouter);
+console.log("📦 Inventory router mounted at /inventory");
+
+// 🚀 Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
