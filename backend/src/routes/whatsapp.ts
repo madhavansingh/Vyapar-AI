@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { parseCommand } from "../services/aiService";
+import prisma from "../utils/db";
 
-const router = Router(); // 👈 this line must exist before router.post or router.get
+const router = Router(); // ✅ must exist before using router.get/post
 
 // ✅ Webhook verification (GET)
 router.get("/", (req, res) => {
@@ -32,15 +33,49 @@ router.post("/", async (req, res) => {
     const aiResult = await Promise.race([
       parseCommand(messageText),
       new Promise((_resolve, reject) =>
-        setTimeout(() => reject(new Error("AI response timeout")), 15000)
+        setTimeout(() => reject(new Error("AI response timeout")), 60000)
       ),
     ]);
 
     console.log("🧠 AI UNDERSTOOD:", aiResult);
 
+    // ✅ Handle AI intent logic
+    let dbResponse: any = null;
+
+    if (aiResult.intent === "add_item") {
+      dbResponse = await prisma.inventoryItem.create({
+        data: {
+          name: aiResult.item || "unknown",
+          quantity: aiResult.quantity || 0,
+          expiry: aiResult.expiry || "unknown",
+        },
+      });
+      console.log("📦 Item added to inventory:", dbResponse);
+    }
+
+    if (aiResult.intent === "check_stock") {
+      dbResponse = await prisma.inventoryItem.findFirst({
+  where: {
+    name: {
+      equals: aiResult.item.toLowerCase(),
+    },
+  },
+});
+
+
+
+      if (dbResponse) {
+        console.log("🔍 Stock found:", dbResponse);
+      } else {
+        console.log("⚠️ No stock found for", aiResult.item);
+      }
+    }
+
+    // ✅ Send final response
     return res.status(200).json({
       success: true,
       aiResult,
+      dbResponse,
     });
   } catch (error: any) {
     console.error("❌ Error handling webhook:", error.message);
@@ -48,4 +83,4 @@ router.post("/", async (req, res) => {
   }
 });
 
-export default router; // 👈 don’t delete this line
+export default router;
