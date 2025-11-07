@@ -8,19 +8,19 @@ export default function DashboardLayout() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-500">
+    <div className="min-h-screen flex bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950">
       {/* Sidebar */}
       <SidebarPro open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-      {/* Main Content */}
+      {/* Main content area */}
       <div className="flex-1 md:ml-56 flex flex-col">
-        {/* Header */}
+        {/* Header with Search */}
         <HeaderPro
           onMenuClick={() => setMenuOpen(true)}
-          onSearchChange={(q) => setSearchQuery(q)}
+          onSearchChange={setSearchQuery}
         />
 
-        {/* Page content */}
+        {/* Page Content — pass searchQuery to each routed component */}
         <main className="p-6 flex-1 overflow-y-auto">
           <Outlet context={{ searchQuery }} />
         </main>

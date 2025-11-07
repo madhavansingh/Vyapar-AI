@@ -6,6 +6,7 @@ import whatsappRouter from "./routes/whatsapp";
 import inventoryRouter from "./routes/inventory";
 import aiRouter from "./routes/ai";
 import { startExpiryWatcher } from "./utils/checkExpiry";
+import alertsRouter from "./routes/alerts";
 
 dotenv.config();
 
@@ -39,6 +40,8 @@ app.use("/ai", aiRouter); // 🧠 Added this line
 
 // ⏰ Start expiry watcher
 startExpiryWatcher();
+
+app.use("/alerts", alertsRouter);
 
 // 🚀 Start server
 const PORT = process.env.PORT || 3000;

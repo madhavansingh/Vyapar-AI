@@ -6,24 +6,36 @@ import { motion } from "framer-motion";
 type Props = {
   open?: boolean;
   onClose?: () => void;
+  alertCount?: number;
 };
 
-export default function SidebarPro({ open = false, onClose }: Props) {
-  const links = [
-    { name: "Dashboard", path: "/", icon: <Home size={18} /> },
-    { name: "Inventory", path: "/inventory", icon: <Package size={18} /> },
-    { name: "Alerts", path: "/alerts", icon: <Bell size={18} /> },
-    { name: "Settings", path: "/settings", icon: <Settings size={18} /> },
-  ];
-
+export default function SidebarPro({ open = false, onClose, alertCount = 0 }: Props) {
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
   }, [open]);
 
+  const links = [
+    { name: "Dashboard", path: "/", icon: <Home size={18} /> },
+    { name: "Inventory", path: "/inventory", icon: <Package size={18} /> },
+    {
+      name: `Alerts ${alertCount > 0 ? `(${alertCount})` : ""}`,
+      path: "/alerts",
+      icon: (
+        <div className="relative">
+          <Bell size={18} className={alertCount > 0 ? "text-orange-500" : ""} />
+          {alertCount > 0 && (
+            <span className="absolute -top-1 -right-1 h-2 w-2 bg-orange-500 rounded-full"></span>
+          )}
+        </div>
+      ),
+    },
+    { name: "Settings", path: "/settings", icon: <Settings size={18} /> },
+  ];
+
   return (
     <>
-      {/* Desktop Sidebar */}
+      {/* 🖥 Desktop Sidebar */}
       <motion.aside
         initial={{ x: -60, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
@@ -53,10 +65,13 @@ export default function SidebarPro({ open = false, onClose }: Props) {
             ))}
           </nav>
         </div>
-        <p className="text-[11px] text-slate-500 dark:text-slate-400">&copy; 2025 Vyapar AI</p>
+
+        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+          &copy; 2025 Vyapar AI
+        </p>
       </motion.aside>
 
-      {/* Mobile Overlay */}
+      {/* 📱 Mobile Overlay */}
       {open && (
         <div
           className="fixed inset-0 bg-black/30 md:hidden z-40"
@@ -64,7 +79,7 @@ export default function SidebarPro({ open = false, onClose }: Props) {
         />
       )}
 
-      {/* Mobile Drawer */}
+      {/* 📱 Mobile Sidebar */}
       <motion.aside
         initial={false}
         animate={{ x: open ? 0 : -280 }}
@@ -72,7 +87,9 @@ export default function SidebarPro({ open = false, onClose }: Props) {
         className="md:hidden fixed top-0 left-0 h-full w-64 bg-white/85 dark:bg-slate-900/80 backdrop-blur-md border-r border-slate-200/40 dark:border-slate-800/40 shadow-2xl flex flex-col p-5 z-50"
       >
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-lg font-bold text-slate-800 dark:text-white">Vyapar AI</h1>
+          <h1 className="text-lg font-bold text-slate-800 dark:text-white">
+            Vyapar AI
+          </h1>
           <button
             onClick={onClose}
             className="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -80,6 +97,7 @@ export default function SidebarPro({ open = false, onClose }: Props) {
             <X size={18} />
           </button>
         </div>
+
         <nav className="flex flex-col gap-2">
           {links.map((link) => (
             <NavLink
