@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "Alerts" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "itemName" TEXT NOT NULL,
+    "expiryDate" TEXT NOT NULL,
+    "daysLeft" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

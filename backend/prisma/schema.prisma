@@ -15,3 +15,10 @@ model Inventory {
   createdAt DateTime @default(now())
 }
 
+model Alerts {
+  id        Int      @id @default(autoincrement())
+  itemName  String
+  expiryDate String
+  daysLeft  Int
+  createdAt DateTime @default(now())
+}

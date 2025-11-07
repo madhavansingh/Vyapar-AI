@@ -5,6 +5,7 @@ import cors from "cors";
 import whatsappRouter from "./routes/whatsapp";
 import inventoryRouter from "./routes/inventory";
 import aiRouter from "./routes/ai";
+import { startExpiryWatcher } from "./utils/checkExpiry";
 
 dotenv.config();
 
@@ -35,6 +36,9 @@ app.post("/test", (req, res) => {
 app.use("/webhook", whatsappRouter);
 app.use("/inventory", inventoryRouter);
 app.use("/ai", aiRouter); // 🧠 Added this line
+
+// ⏰ Start expiry watcher
+startExpiryWatcher();
 
 // 🚀 Start server
 const PORT = process.env.PORT || 3000;
