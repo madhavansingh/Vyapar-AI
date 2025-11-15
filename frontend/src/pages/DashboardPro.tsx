@@ -26,7 +26,7 @@ export default function DashboardPro() {
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // 🔁 Fetch inventory + alerts initially and auto-refresh every 30s
+  //  Fetch inventory + alerts initially and auto-refresh every 30s
   useEffect(() => {
     fetchAll();
     const interval = setInterval(fetchAll, 30000);
