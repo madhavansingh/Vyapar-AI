@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/process", async (req, res) => {
   const { message } = req.body;
-  console.log("🗣️ Voice command received:", message);
+  console.log("Voice command received:", message);
 
   try {
     const reply = await processCommand(message);
